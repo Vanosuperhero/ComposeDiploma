@@ -21,15 +21,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.composediploma.R
+import com.example.composediploma.mqtt.MQTTViewModel
 import kotlin.concurrent.timer
 
 
-@Preview(showBackground = true)
 @Composable
-fun Monitoring(){
+fun Monitoring(viewModel: MQTTViewModel){
     Column() {
-        var img by remember { mutableStateOf(false) }
-
 //    Box(
 //        modifier = Modifier
 //        .fillMaxSize(),
@@ -88,12 +86,15 @@ fun Monitoring(){
         val toPanel = createRef()
         val toConsumer = createRef()
         val toGrid = createRef()
-        val startToPanel = createGuidelineFromStart(0.37f)
-        val topToPanel = createGuidelineFromTop(0.33f)
-        val startToConsumer = createGuidelineFromStart(0.43f)
-        val topToConsumer = createGuidelineFromTop(0.81f)
-        val startToGrid = createGuidelineFromStart(0.67f)
-        val topToGrid = createGuidelineFromTop(0.81f)
+        val startToPanel = createGuidelineFromStart(0.35f)
+        val topToPanel = createGuidelineFromTop(0.26f)
+        val endToPanel = createGuidelineFromEnd(0.352f)
+        val bottomToPanel = createGuidelineFromBottom(0.405f)
+
+        val startToConsumer = createGuidelineFromStart(0.41f)
+        val topToConsumer = createGuidelineFromTop(0.83f)
+        val startToGrid = createGuidelineFromStart(0.61f)
+        val topToGrid = createGuidelineFromTop(0.83f)
 
         Image(
             painter = painterResource(R.drawable.mainviewfsta),
@@ -106,9 +107,28 @@ fun Monitoring(){
                     start.linkTo(parent.start)
                 },
         )
+        Box(modifier = Modifier
+            .constrainAs(toPanel) {
+                top.linkTo(topToPanel)
+                start.linkTo(startToPanel)
+                end.linkTo(endToPanel)
+                bottom.linkTo(bottomToPanel)
+            }
+            .background(Color.Gray)
+
+        ) {
+            Text(
+                fontSize = 28.sp,
+                text = "2.45\n кВт",
+//            fontFamily = MyFontsFamily,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colors.onBackground,
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
 //        Text(
 //            fontSize = 28.sp,
-//            text = "2.45 kW",
+//            text = "2.45\n кВт",
 ////            fontFamily = MyFontsFamily,
 //            fontWeight = FontWeight.Bold,
 //            color = MaterialTheme.colors.onBackground,
@@ -117,33 +137,30 @@ fun Monitoring(){
 //                start.linkTo(startToPanel)
 //            }
 //        )
-//        Text(
-//            fontSize = 14.sp,
-//            text = "1.21\n kW",
-////            fontFamily = MyFontsFamily,
-//            fontWeight = FontWeight.Bold,
-//            color = Color.White,
-////                modifier = Modifier
-//            modifier = Modifier.constrainAs(toConsumer) {
-//                top.linkTo(topToConsumer)
-//                start.linkTo(startToConsumer)
-//            }
-//        )
-//        Text(
-//            fontSize = 14.sp,
-//            text = "0.87\n kW",
-////            fontFamily = MyFontsFamily,
-//            fontWeight = FontWeight.Bold,
-//            color = Color.White,
-//            modifier = Modifier.constrainAs(toGrid) {
-//                top.linkTo(topToGrid)
-//                start.linkTo(startToGrid)
-//            }
-//        )
+        Text(
+            fontSize = 14.sp,
+            text = viewModel.message.value,
+//            fontFamily = MyFontsFamily,
+            fontWeight = FontWeight.Bold,
+            color = Color.White,
+//                modifier = Modifier
+            modifier = Modifier.constrainAs(toConsumer) {
+                top.linkTo(topToConsumer)
+                start.linkTo(startToConsumer)
+            }
+        )
+        Text(
+            fontSize = 14.sp,
+            text = "0.87\n кВт",
+//            fontFamily = MyFontsFamily,
+            fontWeight = FontWeight.Bold,
+            color = Color.White,
+            modifier = Modifier.constrainAs(toGrid) {
+                top.linkTo(topToGrid)
+                start.linkTo(startToGrid)
+            }
+        )
     }
-//        Button(onClick = { img = !img}) {
-//
-//        }
 }
 }
 

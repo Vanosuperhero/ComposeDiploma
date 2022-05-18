@@ -38,16 +38,13 @@ fun Statistics(){
     PieChart(
         pieChartData = PieChartData(
             slices = listOf(
-                PieChartData.Slice(
-                    10F,
-                    Color.Cyan
-                ),
+                PieChartData.Slice(10F, Color.Cyan),
                 PieChartData.Slice(4F, Color.Red),
                 PieChartData.Slice(6F, Color.Yellow)
             )
         ),
         // Optional properties.
-        modifier = Modifier.size(30.dp),
+        modifier = Modifier.size(150.dp),
         animation = simpleChartAnimation(),
         sliceDrawer = SimpleSliceDrawer()
     )

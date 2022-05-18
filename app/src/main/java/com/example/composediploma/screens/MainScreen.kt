@@ -3,12 +3,17 @@ package com.example.composediploma.screens
 import android.content.Context
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -16,21 +21,38 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.composediploma.mqtt.MQTTViewModel
 import com.example.composediploma.navigation.BottomNavGraph
 import com.example.composediploma.navigation.Screen
+import com.example.composediploma.ui.theme.Accent_Blue80
+import com.example.composediploma.ui.theme.Accent_BlueDark
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 
 @Composable
-fun MainScreen(context: Context){
+fun MainScreen(context: Context, viewModel: MQTTViewModel){
     val navController = rememberNavController()
     Scaffold(
         topBar = {
-        TopAppBar {}
+            TopAppBar(
+                title = { Text("СЭС МЭИ") },
+                navigationIcon = {
+                    IconButton(onClick = { /* doSomething() */ }) {
+                        Icon(Icons.Filled.Menu, contentDescription = null)
+                    }
+                },
+                actions = {
+                    // RowScope here, so these icons will be placed horizontally
+                    IconButton(onClick = { /* doSomething() */ }) {
+                        Icon(Icons.Filled.Favorite, contentDescription = "Localized description")
+                    }
+                },
+                elevation = 2.dp
+            )
     },
         bottomBar = { BottomBar(navController = navController) }
     ) {
-        BottomNavGraph(context = context, navController = navController)
+        BottomNavGraph(context = context, navController = navController, viewModel)
     }
 }
 
@@ -44,7 +66,7 @@ fun BottomBar(navController: NavHostController){
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-    
+
     BottomNavigation() {
         screens.forEach{ screen ->
             AddItem(
@@ -62,14 +84,14 @@ fun RowScope.AddItem(
     currentDestination: NavDestination?,
     navController: NavHostController
 ){
-//    val systemUiController = rememberSystemUiController()
-//    val useDarkIcons = MaterialTheme.colors.isLight
-//    SideEffect {
-//        systemUiController.setStatusBarColor(
-//            color = Color.Transparent,
-//            darkIcons = useDarkIcons
-//        )
-//    }
+    val systemUiController = rememberSystemUiController()
+    val useDarkIcons = MaterialTheme.colors.isLight
+    SideEffect {
+        systemUiController.setStatusBarColor(
+            color = Accent_BlueDark,
+            darkIcons = useDarkIcons
+        )
+    }
   BottomNavigationItem(
       label = {
           Text(text = screen.title)
@@ -93,3 +115,4 @@ fun RowScope.AddItem(
       }
   )
 }
+
