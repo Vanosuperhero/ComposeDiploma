@@ -28,73 +28,42 @@ import kotlin.concurrent.timer
 @Composable
 fun Monitoring(viewModel: MQTTViewModel){
     Column() {
-//    Box(
-//        modifier = Modifier
-//        .fillMaxSize(),
-//        contentAlignment = Alignment.TopCenter
-//    ){
-//        Image(
-//            painter = painterResource(R.drawable.mainview1),
-//            contentDescription = "mainView",
-//            contentScale = ContentScale.Crop,
-//            modifier = Modifier.fillMaxWidth(),
-//        )
-//        Text(
-//            fontSize = 28.sp,
-//            text = "2.45 kW",
-////            fontFamily = MyFontsFamily,
-//            fontWeight = FontWeight.Bold,
-//            color = MaterialTheme.colors.onBackground,
-//            modifier = Modifier
-//                .padding(vertical = 90.dp),
-//        )
-//        Box(modifier = Modifier.fillMaxWidth()) {
-//
-//            Text(
-//                fontSize = 14.sp,
-//                text = "1.21\n kW",
-////            fontFamily = MyFontsFamily,
-//                fontWeight = FontWeight.Bold,
-//                color = Color.White,
-////                modifier = Modifier
-////                    .align(),
-//            )
-//            Text(
-//                fontSize = 14.sp,
-//                text = "0.87\n kW",
-////            fontFamily = MyFontsFamily,
-//                fontWeight = FontWeight.Bold,
-//                color = Color.White,
-//                modifier = Modifier
-//                    .padding(top = 282.dp, start = 263.dp ),
-//            )
-//        }
-//    }
-//Box(Modifier.wrapContentSize().background(Color.Gray)) {
-
-//    Image(
-//            painter = painterResource(R.drawable.mainview1),
-//            contentDescription = "mainView",
-//            contentScale = ContentScale.Crop,
-//            modifier = Modifier.fillMaxWidth().alpha(0.5f),
-//        )
-
     ConstraintLayout(
-//        modifier = Modifier.fillMaxSize()
     ) {
         val mainImage = createRef()
-        val toPanel = createRef()
-        val toConsumer = createRef()
-        val toGrid = createRef()
-        val startToPanel = createGuidelineFromStart(0.35f)
-        val topToPanel = createGuidelineFromTop(0.26f)
-        val endToPanel = createGuidelineFromEnd(0.352f)
-        val bottomToPanel = createGuidelineFromBottom(0.405f)
+        val toPanelUp = createRef()
+        val toPanelDown = createRef()
+        val toConsumerUp = createRef()
+        val toConsumerDown = createRef()
+        val fromGridUp = createRef()
+        val fromGridDown = createRef()
+        val toGridUp = createRef()
+        val toGridDown = createRef()
 
-        val startToConsumer = createGuidelineFromStart(0.41f)
-        val topToConsumer = createGuidelineFromTop(0.83f)
-        val startToGrid = createGuidelineFromStart(0.61f)
-        val topToGrid = createGuidelineFromTop(0.83f)
+        val startToPanel = createGuidelineFromStart(0.35f)
+        val endToPanel = createGuidelineFromEnd(0.352f)
+        val topToPanel = createGuidelineFromTop(0.26f)
+        val bottomToPanel = createGuidelineFromBottom(0.405f)
+        val middleToPanelUp = createGuidelineFromBottom(0.56f)
+        val middleToPanelDown = createGuidelineFromBottom(0.545f)
+
+        val startToConsumer = createGuidelineFromStart(0.39f)
+        val endToConsumer = createGuidelineFromEnd(0.5f)
+        val topToConsumer = createGuidelineFromTop(0.818f)
+        val bottomToConsumer = createGuidelineFromBottom(0.057f)
+        val middleToConsumerUp = createGuidelineFromBottom(0.122f)
+        val middleToConsumerDown = createGuidelineFromBottom(0.108f)
+        val startToGrid = createGuidelineFromStart(0.59f)
+        val endToGrid = createGuidelineFromEnd(0.3f)
+
+
+        val startFromGrid = createGuidelineFromStart(0.717f)
+        val endFromGrid = createGuidelineFromEnd(0.108f)
+        val topFromGrid = createGuidelineFromTop(0.513f)
+        val bottomFromGrid = createGuidelineFromBottom(0.29f)
+        val middleFromGridUp = createGuidelineFromBottom(0.38f)
+        val middleFromGridDown = createGuidelineFromBottom(0.37f)
+
 
         Image(
             painter = painterResource(R.drawable.mainviewfsta),
@@ -108,58 +77,144 @@ fun Monitoring(viewModel: MQTTViewModel){
                 },
         )
         Box(modifier = Modifier
-            .constrainAs(toPanel) {
-                top.linkTo(topToPanel)
+            .constrainAs(toPanelUp) {
+//                top.linkTo(topToPanel)
                 start.linkTo(startToPanel)
                 end.linkTo(endToPanel)
-                bottom.linkTo(bottomToPanel)
+                bottom.linkTo(middleToPanelDown)
             }
-            .background(Color.Gray)
-
         ) {
             Text(
-                fontSize = 28.sp,
-                text = "2.45\n кВт",
+                fontSize = 30.sp,
+                text = "2.45",
 //            fontFamily = MyFontsFamily,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colors.onBackground,
-                modifier = Modifier.align(Alignment.Center)
+//                modifier = Modifier.align(Alignment.Center)
             )
         }
-//        Text(
-//            fontSize = 28.sp,
-//            text = "2.45\n кВт",
-////            fontFamily = MyFontsFamily,
-//            fontWeight = FontWeight.Bold,
-//            color = MaterialTheme.colors.onBackground,
-//            modifier = Modifier.constrainAs(toPanel) {
-//                top.linkTo(topToPanel)
-//                start.linkTo(startToPanel)
-//            }
-//        )
-        Text(
-            fontSize = 14.sp,
-            text = viewModel.message.value,
+        Box(modifier = Modifier
+            .constrainAs(toPanelDown) {
+                top.linkTo(middleToPanelUp)
+                start.linkTo(startToPanel)
+                end.linkTo(endToPanel)
+//                bottom.linkTo(bottomToPanel)
+            }
+        ) {
+            Text(
+                fontSize = 20.sp,
+                text = "кВт",
 //            fontFamily = MyFontsFamily,
-            fontWeight = FontWeight.Bold,
-            color = Color.White,
-//                modifier = Modifier
-            modifier = Modifier.constrainAs(toConsumer) {
-                top.linkTo(topToConsumer)
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colors.onBackground,
+//                modifier = Modifier.align(Alignment.Center)
+            )
+        }
+
+
+        Box(modifier = Modifier
+            .constrainAs(toConsumerUp) {
+//                top.linkTo(topToConsumer)
                 start.linkTo(startToConsumer)
+                end.linkTo(endToConsumer)
+                bottom.linkTo(middleToConsumerDown)
+
             }
-        )
-        Text(
-            fontSize = 14.sp,
-            text = "0.87\n кВт",
-//            fontFamily = MyFontsFamily,
-            fontWeight = FontWeight.Bold,
-            color = Color.White,
-            modifier = Modifier.constrainAs(toGrid) {
-                top.linkTo(topToGrid)
+        ) {
+            Text(
+                fontSize = 16.sp,
+                text = "0.27",
+//                text = viewModel.message.value,
+//                fontFamily = MyFontsFamily,
+                fontWeight = FontWeight.Bold,
+                color = Color.White,
+//                modifier = Modifier.align(Alignment.BottomCenter)
+            )
+        }
+        Box(modifier = Modifier
+            .constrainAs(toConsumerDown) {
+                top.linkTo(middleToConsumerUp)
+                start.linkTo(startToConsumer)
+                end.linkTo(endToConsumer)
+//                bottom.linkTo(bottomToConsumer)
+            }
+        ) {
+            Text(
+                fontSize = 12.sp,
+                text = "кВт",
+//                text = viewModel.message.value,
+//                fontFamily = MyFontsFamily,
+                fontWeight = FontWeight.Bold,
+                color = Color.White,
+//                modifier = Modifier.align(Alignment.TopCenter)
+            )
+        }
+
+        Box(modifier = Modifier
+            .constrainAs(toGridUp) {
+//                top.linkTo(topToConsumer)
                 start.linkTo(startToGrid)
+                end.linkTo(endToGrid)
+                bottom.linkTo(middleToConsumerDown)
             }
-        )
+        ) {
+            Text(
+                fontSize = 16.sp,
+                text = "0.35",
+//            fontFamily = MyFontsFamily,
+                fontWeight = FontWeight.Bold,
+                color = Color.White,
+            )
+        }
+        Box(modifier = Modifier
+            .constrainAs(toGridDown) {
+                top.linkTo(middleToConsumerUp)
+                start.linkTo(startToGrid)
+                end.linkTo(endToGrid)
+//                bottom.linkTo(bottomToConsumer)
+            }
+        ) {
+            Text(
+                fontSize = 12.sp,
+                text = "кВт",
+//            fontFamily = MyFontsFamily,
+                fontWeight = FontWeight.Bold,
+                color = Color.White,
+            )
+        }
+
+        Box(modifier = Modifier
+            .constrainAs(fromGridUp) {
+//                top.linkTo(topFromGrid)
+                start.linkTo(startFromGrid)
+                end.linkTo(endFromGrid)
+                bottom.linkTo(middleFromGridDown)
+            }
+        ) {
+            Text(
+                fontSize = 20.sp,
+                text = "3.27",
+//            fontFamily = MyFontsFamily,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+            )
+        }
+        Box(modifier = Modifier
+            .constrainAs(fromGridDown) {
+                top.linkTo(middleFromGridUp)
+                start.linkTo(startFromGrid)
+                end.linkTo(endFromGrid)
+//                bottom.linkTo(bottomFromGrid)
+            }
+        ) {
+            Text(
+                fontSize = 14.sp,
+                text = "кВт",
+//            fontFamily = MyFontsFamily,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+            )
+        }
     }
 }
 }
