@@ -17,6 +17,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val viewModel: MQTTViewModel by viewModels()
+        viewModel.connect(this)
         setContent {
             ComposeDiplomaTheme {
                 MainScreen(this,viewModel)

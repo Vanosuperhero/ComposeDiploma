@@ -32,41 +32,39 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 @Composable
 fun MainScreen(context: Context, viewModel: MQTTViewModel){
     val navController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+    val currentRoute = navBackStackEntry?.destination?.route?:Screen.Monitoring.route
+    val screens = listOf(
+        Screen.Monitoring,
+        Screen.Statistics,
+        Screen.Weather
+    )
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("СЭС МЭИ") },
+                title = { Text(screens.first { it.route == currentRoute }.title) },
                 navigationIcon = {
                     IconButton(onClick = { /* doSomething() */ }) {
                         Icon(Icons.Filled.Menu, contentDescription = null)
                     }
                 },
                 actions = {
-                    // RowScope here, so these icons will be placed horizontally
                     IconButton(onClick = { /* doSomething() */ }) {
                         Icon(Icons.Filled.Favorite, contentDescription = "Localized description")
                     }
                 },
-                elevation = 2.dp
+                elevation = 8.dp
             )
     },
-        bottomBar = { BottomBar(navController = navController) }
+        bottomBar = { BottomBar(navController, currentDestination, screens) }
     ) {
         BottomNavGraph(context = context, navController = navController, viewModel)
     }
 }
 
-
 @Composable
-fun BottomBar(navController: NavHostController){
-    val screens = listOf(
-        Screen.Monitoring,
-        Screen.Statistics,
-        Screen.Weather
-    )
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
-
+fun BottomBar(navController: NavHostController,currentDestination: NavDestination?, screens: List<Screen>){
     BottomNavigation() {
         screens.forEach{ screen ->
             AddItem(
