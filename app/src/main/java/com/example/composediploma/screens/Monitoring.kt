@@ -1,5 +1,6 @@
 package com.example.composediploma.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -66,9 +67,24 @@ fun Monitoring(viewModel: MQTTViewModel){
                 val middleFromGridUp = createGuidelineFromBottom(0.38f)
                 val middleFromGridDown = createGuidelineFromBottom(0.37f)
 
+                //Задаем условия для смены фона
+                viewModel.fgtc.value = viewModel.pv.value <= 0
+                viewModel.fatc.value = viewModel.pv.value > 0 && viewModel.fromGrid.value > 0
+                viewModel.fstc.value = viewModel.pv.value > 0 && viewModel.fromGrid.value <= 0 && viewModel.toGrid.value <= 0
+                viewModel.fsta.value = viewModel.toGrid.value > 0
+
+                val item = arrayOf("97.100997, 58.369522, 97.117713, 58.377901")
+                Log.d("geometryBBox", item?.toString() )
 
                 Image(
-                    painter = painterResource(R.drawable.mainviewfsta),
+                    painter = painterResource(
+                        if (viewModel.fatc.value) R.drawable.mainviewfatc else{
+                            if (viewModel.fgtc.value) R.drawable.mainviewfgtc else{
+                                if (viewModel.fstc.value) R.drawable.mainviewfstc else{
+                                     R.drawable.mainviewfsta
+                                }
+                            }
+                        }),
                     contentDescription = "mainView",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -78,6 +94,9 @@ fun Monitoring(viewModel: MQTTViewModel){
                             start.linkTo(parent.start)
                         },
                 )
+/**
+                ПАНЕЛИ
+**/
                 Box(modifier = Modifier
                     .constrainAs(toPanelUp) {
 //                top.linkTo(topToPanel)
@@ -88,7 +107,7 @@ fun Monitoring(viewModel: MQTTViewModel){
                 ) {
                     Text(
                         fontSize = 30.sp,
-                        text = "2.45",
+                        text = "${viewModel.pv.value}",
 //            fontFamily = MyFontsFamily,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colors.onBackground,
@@ -112,8 +131,9 @@ fun Monitoring(viewModel: MQTTViewModel){
 //                modifier = Modifier.align(Alignment.Center)
                     )
                 }
-
-
+/**
+                ПОТРЕБИТЕЛЬ
+**/
                 Box(modifier = Modifier
                     .constrainAs(toConsumerUp) {
 //                top.linkTo(topToConsumer)
@@ -125,7 +145,7 @@ fun Monitoring(viewModel: MQTTViewModel){
                 ) {
                     Text(
                         fontSize = 16.sp,
-                        text = "0.27",
+                        text = "${viewModel.consumer.value}",
 //                text = viewModel.message.value,
 //                fontFamily = MyFontsFamily,
                         fontWeight = FontWeight.Bold,
@@ -152,6 +172,10 @@ fun Monitoring(viewModel: MQTTViewModel){
                     )
                 }
 
+/**
+                В СЕТЬ
+**/
+
                 Box(modifier = Modifier
                     .constrainAs(toGridUp) {
 //                top.linkTo(topToConsumer)
@@ -162,7 +186,7 @@ fun Monitoring(viewModel: MQTTViewModel){
                 ) {
                     Text(
                         fontSize = 16.sp,
-                        text = "0.35",
+                        text = if(viewModel.toGrid.value>0)"${viewModel.toGrid.value}" else "",
 //            fontFamily = MyFontsFamily,
                         fontWeight = FontWeight.Bold,
                         color = Color.White,
@@ -178,13 +202,15 @@ fun Monitoring(viewModel: MQTTViewModel){
                 ) {
                     Text(
                         fontSize = 12.sp,
-                        text = "кВт",
+                        text = if(viewModel.toGrid.value>0)"кВт" else "",
 //            fontFamily = MyFontsFamily,
                         fontWeight = FontWeight.Bold,
                         color = Color.White,
                     )
                 }
-
+/**
+                ИЗ СЕТИ
+**/
                 Box(modifier = Modifier
                     .constrainAs(fromGridUp) {
 //                top.linkTo(topFromGrid)
@@ -195,7 +221,7 @@ fun Monitoring(viewModel: MQTTViewModel){
                 ) {
                     Text(
                         fontSize = 20.sp,
-                        text = "3.27",
+                        text = if(viewModel.fromGrid.value>0)"${viewModel.fromGrid.value}" else "",
 //            fontFamily = MyFontsFamily,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black,
@@ -211,7 +237,7 @@ fun Monitoring(viewModel: MQTTViewModel){
                 ) {
                     Text(
                         fontSize = 14.sp,
-                        text = "кВт",
+                        text = if(viewModel.fromGrid.value>0)"кВт" else "",
 //            fontFamily = MyFontsFamily,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black,
