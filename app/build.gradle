@@ -75,11 +75,11 @@ dependencies {
 //    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 //    implementation 'com.github.hannesa2:paho.mqtt.android:3.3.5'
 //    implementation(name:'serviceLibrary-release', ext:'aar')
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:7.1.0'
+//    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:7.1.0'
     implementation 'com.jakewharton.timber:timber:4.7.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.work:work-runtime:2.7.1'
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
-    implementation('io.github.bytebeats:compose-charts:0.1.1')
+    implementation 'io.github.bytebeats:compose-charts:0.1.1'
     implementation 'androidx.fragment:fragment-ktx:1.4.1'
 }

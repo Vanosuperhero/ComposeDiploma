@@ -2,10 +2,12 @@ package com.example.composediploma.screens
 
 import android.util.Log
 import androidx.compose.foundation.Image
+//import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -14,7 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.layout
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -67,21 +72,14 @@ fun Monitoring(viewModel: MQTTViewModel){
                 val middleFromGridUp = createGuidelineFromBottom(0.38f)
                 val middleFromGridDown = createGuidelineFromBottom(0.37f)
 
-                //Задаем условия для смены фона
-                viewModel.fgtc.value = viewModel.pv.value <= 0
-                viewModel.fatc.value = viewModel.pv.value > 0 && viewModel.fromGrid.value > 0
-                viewModel.fstc.value = viewModel.pv.value > 0 && viewModel.fromGrid.value <= 0 && viewModel.toGrid.value <= 0
-                viewModel.fsta.value = viewModel.toGrid.value > 0
-
-                val item = arrayOf("97.100997, 58.369522, 97.117713, 58.377901")
-                Log.d("geometryBBox", item?.toString() )
-
                 Image(
                     painter = painterResource(
-                        if (viewModel.fatc.value) R.drawable.mainviewfatc else{
-                            if (viewModel.fgtc.value) R.drawable.mainviewfgtc else{
-                                if (viewModel.fstc.value) R.drawable.mainviewfstc else{
-                                     R.drawable.mainviewfsta
+                        if (viewModel.fgtc.value) R.drawable.mainviewfgtc else{
+                            if (viewModel.fatc.value) R.drawable.mainviewfatc else{
+                                if (viewModel.fsta.value) R.drawable.mainviewfsta else {
+                                    if (viewModel.fstc.value) R.drawable.mainviewfstc else {
+                                        R.drawable.mainviewfstc
+                                    }
                                 }
                             }
                         }),
@@ -145,7 +143,7 @@ fun Monitoring(viewModel: MQTTViewModel){
                 ) {
                     Text(
                         fontSize = 16.sp,
-                        text = "${viewModel.consumer.value}",
+                        text = "${viewModel.pv1.value}",
 //                text = viewModel.message.value,
 //                fontFamily = MyFontsFamily,
                         fontWeight = FontWeight.Bold,
@@ -171,11 +169,9 @@ fun Monitoring(viewModel: MQTTViewModel){
 //                modifier = Modifier.align(Alignment.TopCenter)
                     )
                 }
-
 /**
                 В СЕТЬ
 **/
-
                 Box(modifier = Modifier
                     .constrainAs(toGridUp) {
 //                top.linkTo(topToConsumer)
@@ -245,10 +241,62 @@ fun Monitoring(viewModel: MQTTViewModel){
                 }
             }
         }
-        for (i in 1..100) {
-            item { Text(text = "$i",Modifier.fillMaxWidth()) }
+        item {
+            Row(Modifier.fillMaxWidth()){
+                Column(Modifier.padding(start = 22.dp, end = 22.dp, top = 10.dp, bottom = 10.dp)) {
+                    IndexInverter(title = "Мощность выходная", value = "${viewModel.pv.value} кВт",
+                        "P")
+                    IndexInverter(title = "Мощность PV1", value = "${viewModel.pv1.value} кВт",
+                        "P")
+                    IndexInverter(title = "Напряжение PV1", value = "${viewModel.pv1_voltage.value} В",
+                        "V")
+                    IndexInverter(title = "Ток PV1", value = "${viewModel.pv1_current.value} А",
+                        "A")
+//                }
+//                Column(Modifier.padding(start = 11.dp, end = 22.dp)) {
+                    IndexInverter(title = "Мощность PV2", value = "${viewModel.pv2.value} кВт",
+                        "P")
+                    IndexInverter(title = "Напряжение PV2", value = "${viewModel.pv2_voltage.value} В",
+                        "V")
+                    IndexInverter(title = "Ток PV2", value = "${viewModel.pv2_current.value} А",
+                        "A")
+                    IndexInverter(title = "Напряжение сети", value = "${viewModel.grid_voltage.value} В",
+                        "V")
+                    IndexInverter(title = "Ток сети", value = "${viewModel.grid_current.value} А",
+                        "A")
+                    IndexInverter(title = "Частота сети", value = "${viewModel.grid_frequency.value} Гц",
+                        "F")
+
+                }
+            }
         }
     }
 }
 
+@Composable
+fun IndexInverter(title:String, value:String, symbol: String) {
+    Box(Modifier.padding(vertical = 10.dp)) {
+        Row {
+//            Box(modifier = Modifier
+//                .padding(end = 14.dp)
+//                .align(Alignment.CenterVertically))
+//            {
+//                Text(text = symbol, fontSize = 30.sp)
+//            }
+//            Column() {
+            Box(modifier = Modifier.weight(1f)) {
+                Text(text = title, fontWeight = FontWeight.Normal, color = Color.Gray,modifier = Modifier.align(Alignment.CenterStart))
+            }
+            Box(modifier = Modifier.weight(1f)) {
+//                Box(modifier = Modifier.align(Alignment.CenterStart)) {
+                    Text(
+                        text = value,
+                        fontWeight = FontWeight.Normal,
+                        modifier = Modifier.align(Alignment.CenterStart).padding(start = 20.dp)
+                    )
+//                }
+            }
+        }
+    }
+}
 

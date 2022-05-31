@@ -9,6 +9,7 @@ val Teal200 = Color(0xFF03DAC5)
 
 val Accent_Blue_100b = Color(0xFF00AFFF)
 val Accent_Blue = Color(0xFF3790E2)
+val New_Blue = Color(0xFF4D9AE0)
 val Accent_Blue80 = Color(0xCC3790E2)
 val Accent_BlueDark = Color(0xFF2F75B6)
 val almostBlack_b = Color(0xFFFFFFFF)

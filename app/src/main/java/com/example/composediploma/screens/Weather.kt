@@ -53,7 +53,7 @@ fun Weather(context: Context, viewModel: MQTTViewModel) {
         item {
             Box {
                 Image(
-                    painter = painterResource(com.example.composediploma.R.drawable.weatherview),
+                    painter = painterResource(R.drawable.weatherview),
                     contentDescription = "mainView",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -65,7 +65,7 @@ fun Weather(context: Context, viewModel: MQTTViewModel) {
                 )
                 Row(Modifier.padding(start = 22.dp, top = 30.dp)) {
 
-                    TextWithShadow( text = "${viewModel.ta.value.toDouble().toInt()}", modifier = Modifier, fontSize = 80.sp)
+                    TextWithShadow( text = "${if(viewModel.ta.value.isNotEmpty()) viewModel.ta.value.toDouble().toInt() else "0"}", modifier = Modifier, fontSize = 80.sp)
                     TextWithShadow( text = "°C", modifier = Modifier.padding(top = 15.dp, start = 5.dp), fontSize = 35.sp)
 //                    Text(
 //                        text = "${viewModel.ta.value.toDouble().toInt()}",
@@ -84,16 +84,44 @@ fun Weather(context: Context, viewModel: MQTTViewModel) {
             }
         }
         item {
-            Row(Modifier.fillMaxWidth()){
-                Column(Modifier.padding(start = 22.dp, end = 11.dp)) {
-                    Index(title = "Температура", value = "${viewModel.ta.value}°C", R.drawable.device_thermostat_48px)
-                    Index(title = "Скорость ветра", value = "${viewModel.ws1avg.value} м/с", R.drawable.air_48px)
-                    Index(title = "Атм. давление", value = "${viewModel.pa.value} мм.рс", R.drawable.icons8_barometer_64)
+            Row(Modifier.fillMaxWidth().padding(horizontal = 18.dp, vertical = 10.dp)){
+                Box(modifier = Modifier.weight(1f)) {
+                    Column(Modifier.align(Alignment.Center)) {
+                        Index(
+                            title = "Температура",
+                            value = "${viewModel.ta.value}°C",
+                            R.drawable.device_thermostat_48px
+                        )
+                        Index(
+                            title = "Скорость ветра",
+                            value = "${viewModel.ws1avg.value} м/с",
+                            R.drawable.air_48px
+                        )
+                        Index(
+                            title = "Атм. давление",
+                            value = "${viewModel.pa.value} мм.рс",
+                            R.drawable.icons8_barometer_64
+                        )
+                    }
                 }
-                Column(Modifier.padding(start = 11.dp, end = 22.dp)) {
-                    Index(title = "Влажность", value = "${viewModel.rh.value}%", icon = R.drawable.humidity_low_48px)
-                    Index(title = "Кол-во осадков", value = "${viewModel.pr24h.value} мм", icon = R.drawable.umbrella_48px)
-                    Index(title = "Напряжение", value = "${viewModel.v.value} В", icon = R.drawable.bolt_48px)
+                Box(modifier = Modifier.weight(1f)) {
+                    Column(Modifier.align(Alignment.Center)) {
+                        Index(
+                            title = "Влажность",
+                            value = "${viewModel.rh.value}%",
+                            icon = R.drawable.humidity_low_48px
+                        )
+                        Index(
+                            title = "Кол-во осадков",
+                            value = "${viewModel.pr24h.value} мм",
+                            icon = R.drawable.umbrella_48px
+                        )
+                        Index(
+                            title = "Напряжение",
+                            value = "${viewModel.v.value} В",
+                            icon = R.drawable.bolt_48px
+                        )
+                    }
                 }
             }
         }
@@ -102,19 +130,20 @@ fun Weather(context: Context, viewModel: MQTTViewModel) {
 
 @Composable
 fun Index(title:String, value:String, icon: Int) {
-    Box(Modifier.padding(top = 20.dp)) {
+    Box(Modifier.padding(vertical = 10.dp)) {
         Row {
             Icon(painterResource(id = icon), title,
                 Modifier
                     .padding(end = 14.dp)
                     .align(Alignment.CenterVertically))
             Column() {
-                Text(text = title,fontWeight = FontWeight.Bold)
+                Text(text = title,fontWeight = FontWeight.Normal, color = Color.Gray)
                 Text(text = value,fontWeight = FontWeight.Normal)
             }
         }
     }
 }
+
 
 @Composable
 fun TextWithShadow(
@@ -127,10 +156,7 @@ fun TextWithShadow(
             text = text,
             color = Color.DarkGray,
             modifier = modifier
-            .offset(
-                x = 2.dp,
-                y = 2.dp
-            )
+                .offset(x = 2.dp, y = 2.dp)
                 .alpha(0.35f),
             fontWeight = FontWeight.Bold,
             fontSize = fontSize,

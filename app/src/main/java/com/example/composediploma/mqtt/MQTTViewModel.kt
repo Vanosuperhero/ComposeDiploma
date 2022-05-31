@@ -29,15 +29,32 @@ class MQTTViewModel : ViewModel() {
 
     private var _pv = mutableStateOf(0.0)
     var pv = _pv
-    private var _consumerBef = mutableStateOf(0.0)
-    var consumerBef = _consumerBef
-    private var _consumer = mutableStateOf(0.0)
-    var consumer = _consumer
+    private var _pv2 = mutableStateOf(0.0)
+    var pv2 = _pv2
+    private var _pv1Bef = mutableStateOf(0.0)
+    var pv1Bef = _pv1Bef
+    private var _pv1 = mutableStateOf(0.0)
+    var pv1 = _pv1
     private var _fromGrid = mutableStateOf(0.0)
     var fromGrid = _fromGrid
     private var _toGrid = mutableStateOf(0.0)
     var toGrid = _toGrid
-    
+
+    private var _pv1_voltage = mutableStateOf("")
+    var pv1_voltage = _pv1_voltage
+    private var _pv2_voltage = mutableStateOf("")
+    var pv2_voltage = _pv2_voltage
+    private var _pv1_current = mutableStateOf("")
+    var pv1_current = _pv1_current
+    private var _pv2_current = mutableStateOf("")
+    var pv2_current = _pv2_current
+    private var _grid_voltage = mutableStateOf("")
+    var grid_voltage = _grid_voltage
+    private var _grid_current = mutableStateOf("")
+    var grid_current = _grid_current
+    private var _grid_frequency = mutableStateOf("")
+    var grid_frequency = _grid_frequency
+
     var fsta = mutableStateOf(false)
     var fstc = mutableStateOf(false)
     var fatc = mutableStateOf(false)
@@ -60,11 +77,26 @@ class MQTTViewModel : ViewModel() {
                     "mpei/der/weather_station/PR24H/value" -> _pr24h.value = message.toString()
                     "mpei/der/weather_station/V/value" -> _v.value = message.toString()
                     "mpei/der/solar_river/output_power/value" -> _pv.value = message.toString().toDouble()/1000
-                    "mpei/der/solar_river/pv1_input_power/value" -> _consumerBef.value = message.toString().toDouble()/1000
+                    "mpei/der/solar_river/pv1_input_power/value" -> _pv1Bef.value = message.toString().toDouble()/1000
+                    "mpei/der/weather_station/pv2_input_power/value" -> _pv2.value = message.toString().toDouble()/1000
+                    "mpei/der/solar_river/pv1_voltage/value" -> _pv1_voltage.value = message.toString()
+                    "mpei/der/solar_river/pv2_voltage/value" -> _pv2_voltage.value = message.toString()
+                    "mpei/der/solar_river/pv1_current/value" -> _pv1_current.value = message.toString()
+                    "mpei/der/solar_river/pv2_current/value" -> _pv2_current.value = message.toString()
+                    "mpei/der/solar_river/grid_voltage/value" -> _grid_voltage.value = message.toString()
+                    "mpei/der/solar_river/grid_current/value" -> _grid_current.value = message.toString()
+                    "mpei/der/solar_river/grid_frequency/value" -> _grid_frequency.value = message.toString()
                 }
-                consumer.value = consumerBef.value.toBigDecimal().setScale(2, RoundingMode.HALF_UP).toDouble()
-                _fromGrid.value = (consumer.value-pv.value).toBigDecimal().setScale(2, RoundingMode.HALF_UP).toDouble()
+                _pv1.value = pv1Bef.value.toBigDecimal().setScale(2, RoundingMode.HALF_UP).toDouble()
+                _fromGrid.value = (pv1.value-pv.value).toBigDecimal().setScale(2, RoundingMode.HALF_UP).toDouble()
                 _toGrid.value = _fromGrid.value*-1
+
+                //Задаем условия для смены фона
+                fgtc.value = pv.value <= 0 && fromGrid.value > 0 && pv1.value > 0 && toGrid.value <= 0
+                fatc.value = pv.value > 0 && fromGrid.value > 0 && pv1.value > 0 && toGrid.value <= 0
+                fstc.value = pv.value > 0 && fromGrid.value <= 0 && toGrid.value <= 0 && pv1.value > 0
+                fsta.value = toGrid.value > 0 && pv.value > 0 && fromGrid.value <= 0 && pv1.value > 0
+
                 Log.d("view", "fsta-${fsta.value}, fstc-${fstc.value}, fatc-${fatc.value}, fgtc-${fgtc.value}")
             }
 
@@ -91,6 +123,14 @@ class MQTTViewModel : ViewModel() {
                     subscribe("mpei/der/solar_river/output_power/value")
 //                    в место абб пока одна панель:
                     subscribe("mpei/der/solar_river/pv1_input_power/value")
+                    subscribe("mpei/der/weather_station/pv2_input_power/value")
+                    subscribe("mpei/der/solar_river/pv1_voltage/value")
+                    subscribe("mpei/der/solar_river/pv2_voltage/value")
+                    subscribe("mpei/der/solar_river/pv1_current/value")
+                    subscribe("mpei/der/solar_river/pv2_current/value")
+                    subscribe("mpei/der/solar_river/grid_voltage/value")
+                    subscribe("mpei/der/solar_river/grid_current/value")
+                    subscribe("mpei/der/solar_river/grid_frequency/value")
 
                 }
 

@@ -1,7 +1,9 @@
 package com.example.composediploma.screens
 
 import android.content.Context
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -9,6 +11,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -24,8 +27,10 @@ import androidx.navigation.compose.rememberNavController
 import com.example.composediploma.mqtt.MQTTViewModel
 import com.example.composediploma.navigation.BottomNavGraph
 import com.example.composediploma.navigation.Screen
+import com.example.composediploma.ui.theme.Accent_Blue
 import com.example.composediploma.ui.theme.Accent_Blue80
 import com.example.composediploma.ui.theme.Accent_BlueDark
+import com.example.composediploma.ui.theme.New_Blue
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 
@@ -58,14 +63,19 @@ fun MainScreen(context: Context, viewModel: MQTTViewModel){
             )
     },
         bottomBar = { BottomBar(navController, currentDestination, screens) }
-    ) {
-        BottomNavGraph(context = context, navController = navController, viewModel)
+    ) { innerPadding ->
+        Box(modifier = Modifier.padding(innerPadding)) {
+            BottomNavGraph(context = context, navController = navController, viewModel)
+        }
     }
 }
 
 @Composable
 fun BottomBar(navController: NavHostController,currentDestination: NavDestination?, screens: List<Screen>){
-    BottomNavigation() {
+    BottomNavigation(
+//        backgroundColor =  Color.White,
+//        contentColor = New_Blue,
+    ) {
         screens.forEach{ screen ->
             AddItem(
                 screen = screen,
@@ -104,7 +114,8 @@ fun RowScope.AddItem(
       selected = currentDestination?.hierarchy?.any{
           it.route == screen.route
       } == true,
-//      unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.disabled),
+//      unselectedContentColor = Color.Gray,
+//      selectedContentColor = Accent_BlueDark,
       onClick = {
           navController.navigate(screen.route){
               popUpTo(navController.graph.findStartDestination().id)
