@@ -44,9 +44,6 @@ import com.example.composediploma.mqtt.*
 //import org.eclipse.paho.android.service.MqttAndroidClient
 import org.eclipse.paho.client.mqttv3.*
 
-//private val viewModel: MQTTViewModel by viewModels
-
-//@Preview(showBackground = true)
 @Composable
 fun Weather(context: Context, viewModel: MQTTViewModel) {
     LazyColumn() {
@@ -58,28 +55,12 @@ fun Weather(context: Context, viewModel: MQTTViewModel) {
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxWidth()
-//            .constrainAs(mainImage) {
-//                top.linkTo(parent.top)
-//                start.linkTo(parent.start)
-//            },
-                )
-                Row(Modifier.padding(start = 22.dp, top = 30.dp)) {
 
-                    TextWithShadow( text = "${if(viewModel.ta.value.isNotEmpty()) viewModel.ta.value.toDouble().toInt() else "0"}", modifier = Modifier, fontSize = 80.sp)
+                )
+                Row(Modifier.padding(start = 22.dp, top = 25.dp)) {
+                    TextWithShadow( text = "${if(viewModel.ta.value.isNotEmpty()) viewModel.ta.value.toDouble().toInt() else "0"}",
+                        modifier = Modifier, fontSize = 80.sp)
                     TextWithShadow( text = "°C", modifier = Modifier.padding(top = 15.dp, start = 5.dp), fontSize = 35.sp)
-//                    Text(
-//                        text = "${viewModel.ta.value.toDouble().toInt()}",
-//                        fontWeight = FontWeight.Bold,
-//                        fontSize = 80.sp,
-//                        color = Color.White,
-//                    )
-//                    Text(
-//                        text = "°C",
-//                        fontWeight = FontWeight.Bold,
-//                        fontSize = 35.sp,
-//                        color = Color.White,
-//                        modifier = Modifier.padding(top = 15.dp, start = 10.dp)
-//                    )
                 }
             }
         }

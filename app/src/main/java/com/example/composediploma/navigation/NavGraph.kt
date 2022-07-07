@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.composediploma.mqtt.MQTTViewModel
+import com.example.composediploma.mqtt.MySqlViewModel
 import com.example.composediploma.screens.Monitoring
 import com.example.composediploma.screens.Statistics
 import com.example.composediploma.screens.Weather
@@ -15,7 +16,8 @@ import com.example.composediploma.screens.Weather
 fun BottomNavGraph(
     context: Context,
     navController:NavHostController,
-    viewModel: MQTTViewModel
+    viewModel: MQTTViewModel,
+    sqlViewModel: MySqlViewModel
 ){
     NavHost(
         navController = navController,
@@ -34,7 +36,7 @@ fun BottomNavGraph(
         composable(
             route = Screen.Statistics.route
         ){
-            Statistics()
+            Statistics(context, sqlViewModel)
         }
     }
 }

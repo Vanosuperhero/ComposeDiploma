@@ -8,6 +8,7 @@ import androidx.activity.viewModels
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.composediploma.mqtt.MQTTViewModel
+import com.example.composediploma.mqtt.MySqlViewModel
 import com.example.composediploma.screens.MainScreen
 import com.example.composediploma.ui.theme.ComposeDiplomaTheme
 
@@ -16,11 +17,14 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val viewModel: MQTTViewModel by viewModels()
-        viewModel.connect(this)
+        val mqttViewModel: MQTTViewModel by viewModels()
+        val mySqlViewModel: MySqlViewModel by viewModels()
+        mqttViewModel.connect(this)
+        mySqlViewModel.mysqlConnection
+//        mySqlViewModel.state()
         setContent {
             ComposeDiplomaTheme {
-                MainScreen(this,viewModel)
+                MainScreen(this,mqttViewModel,mySqlViewModel)
             }
         }
     }
