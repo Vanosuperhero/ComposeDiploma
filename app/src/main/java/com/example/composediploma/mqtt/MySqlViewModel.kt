@@ -20,29 +20,37 @@ class MySqlViewModel : ViewModel() {
     private var _listOfDataPointMeteo = mutableStateOf(listOf(DataPoint(0f,0f)))
     var listOfDataPointMeteo = _listOfDataPointMeteo
 
+    private var _connected = mutableStateOf(false)
+    var connected = _connected
+
     var mysqlConnection: Connection = Connection("62.109.30.150", "ivan_mpei", "ivA4231n", 3306, "mpei_ses", object :IConnectionInterface{
         override fun actionCompleted() {
+            _connected.value = true
             Log.d("mysqlConnection","complete")
-//            state()
         }
 
         override fun handleInvalidSQLPacketException(ex: InvalidSQLPacketException?) {
+            _connected.value = false
             Log.d("mysqlConnection","invalid ${ex}")
         }
 
         override fun handleMySQLException(ex: MySQLException?) {
+            _connected.value = false
             Log.d("mysqlConnection","msql ${ex}")
         }
 
         override fun handleIOException(ex: IOException?) {
+            _connected.value = false
             Log.d("mysqlConnection","io ${ex}")
         }
 
         override fun handleMySQLConnException(ex: MySQLConnException?) {
+            _connected.value = false
             Log.d("mysqlConnection","conn ${ex}")
         }
 
         override fun handleException(exception: Exception?) {
+            _connected.value = false
             Log.d("mysqlConnection","handle ${exception}")
         }
     })

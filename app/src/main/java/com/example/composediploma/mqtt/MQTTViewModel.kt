@@ -2,6 +2,7 @@ package com.example.composediploma.mqtt
 
 import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -62,7 +63,8 @@ class MQTTViewModel : ViewModel() {
     var fatc = mutableStateOf(false)
     var fgtc = mutableStateOf(false)
 
-    private var _connect = mutableStateOf(false)
+    private var _connected = mutableStateOf(false)
+    var connected = _connected
     private lateinit var mqttClient: MqttAndroidClient
 
     fun connect(context: Context) {
@@ -107,6 +109,8 @@ class MQTTViewModel : ViewModel() {
                     Log.d("view", "fsta-${fsta.value}, fstc-${fstc.value}, fatc-${fatc.value}, fgtc-${fgtc.value}")
                 }
                 override fun connectionLost(cause: Throwable?) {
+                    _connected.value = false
+                    Toast.makeText(context,"Соединение потеряно",Toast.LENGTH_SHORT).show()
                     Log.d("AndroidMqttClient", "Connection lost ${cause.toString()}")
                 }
                 override fun deliveryComplete(token: IMqttDeliveryToken?) {
@@ -116,8 +120,9 @@ class MQTTViewModel : ViewModel() {
             try {
                 mqttClient.connect(options, null, object : IMqttActionListener {
                     override fun onSuccess(asyncActionToken: IMqttToken?) {
+                        Toast.makeText(context,"Соединение установлено",Toast.LENGTH_SHORT).show()
                         Log.d("AndroidMqttClient", "Connection success")
-                        _connect.value = true
+                        _connected.value = true
                         subscribe("mpei/der/weather_station/WS1AVG/value")
                         subscribe("mpei/der/weather_station/TA/value")
                         subscribe("mpei/der/weather_station/PA/value")
@@ -137,8 +142,9 @@ class MQTTViewModel : ViewModel() {
                         subscribe("mpei/der/solar_river/grid_frequency/value")
                     }
                     override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
+                        Toast.makeText(context,"Соединение не установлено",Toast.LENGTH_SHORT).show()
                         Log.d("AndroidMqttClient", "Connection failure ${exception?.cause}")
-                        _connect.value = false
+                        _connected.value = false
                     }
                 })
             } catch (e: MqttException) {
