@@ -67,8 +67,8 @@ class MQTTViewModel : ViewModel() {
 
     fun connect(context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
-//            val serverURI = "tcp://192.168.1.132:1883"
-            val serverURI = "tcp://broker.emqx.io:1883"
+            val serverURI = "tcp://192.168.1.132:1883"
+//            val serverURI = "tcp://broker.emqx.io:1883"
             mqttClient = MqttAndroidClient(context, serverURI, "kotlin_client",)
             mqttClient.setCallback(object : MqttCallback {
                 override fun messageArrived(topic: String?, message: MqttMessage?) {

@@ -1,6 +1,7 @@
 package com.example.composediploma.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 //import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -52,7 +53,6 @@ fun Monitoring(mqttViewModel: MQTTViewModel) {
             val middleToConsumerDown = createGuidelineFromBottom(0.108f)
             val startToGrid = createGuidelineFromStart(0.59f)
             val endToGrid = createGuidelineFromEnd(0.3f)
-
 
             val startFromGrid = createGuidelineFromStart(0.717f)
             val endFromGrid = createGuidelineFromEnd(0.108f)
